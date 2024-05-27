@@ -7,6 +7,7 @@ from pathlib import Path
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
 from tap_hubspot.client import DynamicHubspotStream, DynamicIncrementalHubspotStream, HubspotStream
+from typing import Optional, Any, Dict
 
 PropertiesList = th.PropertiesList
 Property = th.Property
@@ -104,6 +105,7 @@ class OwnersStream(HubspotStream):
     path = "/owners"
     primary_keys = ["id"]
     records_jsonpath = "$[results][*]"  # Or override `parse_response`.
+    partitions = [{"archived": True}, {"archived": False}]
 
     schema = PropertiesList(
         Property("id", StringType),
@@ -123,6 +125,12 @@ class OwnersStream(HubspotStream):
         """
         return "https://api.hubapi.com/crm/v3"
 
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["archived"] = context["archived"]
+        return params
 
 class TicketPipelineStream(HubspotStream):
 
@@ -1240,7 +1248,7 @@ class CompanyStream(DynamicIncrementalHubspotStream):
         return "https://api.hubapi.com/crm/v3"
 
 
-class DealStream(DynamicIncrementalHubspotStream):
+class DealStream(DynamicHubspotStream):
     """
     https://developers.hubspot.com/docs/api/crm/deals
     """
@@ -1256,11 +1264,11 @@ class DealStream(DynamicIncrementalHubspotStream):
 
     name = "deals"
     path = "/objects/deals"
-    incremental_path = "/objects/deals/search"
     primary_keys = ["id"]
-    replication_key = "hs_lastmodifieddate"
+    replication_key = "updatedAt"
     replication_method = "INCREMENTAL"
     records_jsonpath = "$[results][*]"  # Or override `parse_response`.
+    partitions = [{"archived": True}, {"archived": False}]
 
     @property
     def url_base(self) -> str:
@@ -1268,6 +1276,13 @@ class DealStream(DynamicIncrementalHubspotStream):
         Returns an updated path which includes the api version
         """
         return "https://api.hubapi.com/crm/v3"
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["archived"] = context["archived"]
+        return params
 
 
 class FeedbackSubmissionsStream(HubspotStream):
