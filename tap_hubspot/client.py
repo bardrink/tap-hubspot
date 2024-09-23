@@ -161,7 +161,19 @@ class DynamicHubspotStream(HubspotStream):
             th.Property("createdAt", th.DateTimeType),
             th.Property("updatedAt", th.DateTimeType),
             th.Property("archived", th.BooleanType),
+
+            th.Property("associations", th.ObjectType(
+                th.Property("companies", th.ObjectType(
+                    th.Property("results", th.ArrayType(
+                        th.ObjectType(
+                            th.Property("id", th.StringType),
+                            th.Property("type", th.StringType)
+                        )
+                    ))
+                ))
+            ))
         )
+    
         return schema.to_dict()
 
     def _get_available_properties(self) -> dict[str, str]:
