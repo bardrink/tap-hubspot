@@ -210,6 +210,8 @@ class DynamicHubspotStream(HubspotStream):
 class DynamicIncrementalHubspotStream(DynamicHubspotStream):
     """DynamicIncrementalHubspotStream"""
 
+    date_filter = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -320,17 +322,18 @@ class DynamicIncrementalHubspotStream(DynamicHubspotStream):
         if self._is_incremental_search(context):
             # Only filter in case we have a value to filter on
             # https://developers.hubspot.com/docs/api/crm/search
-            ts = datetime.datetime.fromisoformat(self.get_starting_replication_key_value(context))
+            if self.date_filter is None:
+                self.date_filter = datetime.datetime.fromisoformat(self.get_starting_replication_key_value(context))
             if next_page_token:
                 # Hubspot wont return more than 10k records so when we hit 10k we
                 # need to reset our epoch to most recent and not send the next_page_token
                 if int(next_page_token) + 100 >= 10000:
-                    ts = strptime_to_utc(
+                    self.date_filter = strptime_to_utc(
                         self.get_context_state(context).get("progress_markers").get("replication_key_value")
                     )
                 else:
                     body["after"] = next_page_token
-            epoch_ts = str(int(ts.timestamp() * 1000))
+            epoch_ts = str(int(self.date_filter.timestamp() * 1000))
 
             body.update(
                 {
