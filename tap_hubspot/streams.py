@@ -1365,6 +1365,9 @@ class LineItemStream(HubspotStream):
                 Property("price", StringType),
                 Property("quantity", StringType),
                 Property("recurringbillingfrequency", StringType),
+                Property("amount", StringType),
+                Property("start_date", StringType),
+                Property("estimated_end_date", StringType),
             ),
         ),
         Property("createdAt", StringType),
@@ -1378,6 +1381,28 @@ class LineItemStream(HubspotStream):
         Returns an updated path which includes the api version
         """
         return "https://api.hubapi.com/crm/v3"
+    
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+
+        required_properties = [
+            "createdate",
+            "hs_lastmodifieddate",
+            "hs_product_id",
+            "hs_recurring_billing_period",
+            "name",
+            "price",
+            "quantity",
+            "recurringbillingfrequency",
+            "amount",
+            "start_date",
+            "estimated_end_date",
+        ]
+        params["properties"] = ",".join(required_properties)
+
+        return params
 
 
 class ProductStream(HubspotStream):
