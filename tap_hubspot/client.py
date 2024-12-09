@@ -170,6 +170,14 @@ class DynamicHubspotStream(HubspotStream):
                             th.Property("type", th.StringType)
                         )
                     ))
+                )),
+                th.Property("line items", th.ObjectType(
+                    th.Property("results", th.ArrayType(
+                        th.ObjectType(
+                            th.Property("id", th.StringType),
+                            th.Property("type", th.StringType)
+                        )
+                    ))
                 ))
             ))
         )
