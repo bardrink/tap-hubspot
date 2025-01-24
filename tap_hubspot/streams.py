@@ -1437,6 +1437,11 @@ class ProductStream(HubspotStream):
                 Property("hs_sku", StringType),
                 Property("name", StringType),
                 Property("price", StringType),
+                Property("hs_folder", StringType),
+                Property("hs_price_czk", StringType),
+                Property("hs_price_eur", StringType),
+                Property("hs_price_usd", StringType),
+                Property("hs_product_type", StringType),
             ),
         ),
         Property("createdAt", StringType),
@@ -1450,6 +1455,29 @@ class ProductStream(HubspotStream):
         Returns an updated path which includes the api version
         """
         return "https://api.hubapi.com/crm/v3"
+    
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+
+        required_properties = [
+            "createdate",
+            "description",
+            "hs_lastmodifieddate",
+            "hs_product_id",
+            "hs_recurring_billing_period",
+            "name",
+            "price",
+            "hs_folder",
+            "hs_price_czk",
+            "hs_price_eur",
+            "hs_price_usd",
+            "hs_product_type",
+        ]
+        params["properties"] = ",".join(required_properties)
+
+        return params
 
 
 class TicketStream(HubspotStream):
