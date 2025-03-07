@@ -1679,9 +1679,9 @@ class CommunicationStream(DynamicIncrementalHubspotStream):
         return "https://api.hubapi.com/crm/v3"
 
 
-class EmailStream(HubspotStream):
+class EmailStream(DynamicIncrementalHubspotStream):
     """
-    https://developers.hubspot.com/docs/api/crm/email
+    https://developers.hubspot.com/docs/api/crm/meetings
     """
 
     """
@@ -1695,34 +1695,11 @@ class EmailStream(HubspotStream):
 
     name = "emails"
     path = "/objects/emails"
+    incremental_path = "/objects/emails/search"
     primary_keys = ["id"]
+    replication_key = "hs_lastmodifieddate"
+    replication_method = "INCREMENTAL"
     records_jsonpath = "$[results][*]"  # Or override `parse_response`.
-
-    schema = PropertiesList(
-        Property("id", StringType),
-        Property(
-            "properties",
-            ObjectType(
-                Property("createdate", StringType),
-                Property("hs_email_direction", StringType),
-                Property("hs_email_sender_email", StringType),
-                Property("hs_email_sender_firstname", StringType),
-                Property("hs_email_sender_lastname", StringType),
-                Property("hs_email_status", StringType),
-                Property("hs_email_subject", StringType),
-                Property("hs_email_text", StringType),
-                Property("hs_email_to_email", StringType),
-                Property("hs_email_to_firstname", StringType),
-                Property("hs_email_to_lastname", StringType),
-                Property("hs_lastmodifieddate", StringType),
-                Property("hs_timestamp", StringType),
-                Property("hubspot_owner_id", StringType),
-            ),
-        ),
-        Property("createdAt", StringType),
-        Property("updatedAt", StringType),
-        Property("archived", BooleanType),
-    ).to_dict()
 
     @property
     def url_base(self) -> str:
