@@ -1681,7 +1681,7 @@ class CommunicationStream(DynamicIncrementalHubspotStream):
 
 class EmailStream(DynamicIncrementalHubspotStream):
     """
-    https://developers.hubspot.com/docs/api/crm/meetings
+    https://developers.hubspot.com/docs/api/crm/emails
     """
 
     """
@@ -1700,6 +1700,25 @@ class EmailStream(DynamicIncrementalHubspotStream):
     replication_key = "hs_lastmodifieddate"
     replication_method = "INCREMENTAL"
     records_jsonpath = "$[results][*]"  # Or override `parse_response`.
+
+    REQUIRED_PROPERTIES = [
+        "hubspot_owner_id",
+        "hs_email_subject",
+        "hs_created_by_user_id",
+        "hs_createdate",
+        "hs_email_direction",
+        "hs_email_logged_from",
+        "hs_email_sender_email",
+        "hs_email_status",
+        "hs_engagement_source",
+        "hs_object_source",
+        "hs_product_name",
+        "hs_timestamp"
+    ]
+
+    def _get_available_properties(self):
+        """Override the method to return only selected properties."""
+        return {prop: "string" for prop in self.REQUIRED_PROPERTIES}
 
     @property
     def url_base(self) -> str:
