@@ -1282,7 +1282,7 @@ class DealStream(DynamicHubspotStream):
     ) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params["archived"] = context["archived"]
-        params["associations"] = "companies,line_item"  # get associated companies
+        params["associations"] = "companies,line_item,task,call,email,meeting"  # get associated objects
         return params
 
 

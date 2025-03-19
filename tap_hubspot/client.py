@@ -178,6 +178,38 @@ class DynamicHubspotStream(HubspotStream):
                             th.Property("type", th.StringType)
                         )
                     ))
+                )),
+                th.Property("calls", th.ObjectType(
+                    th.Property("results", th.ArrayType(
+                        th.ObjectType(
+                            th.Property("id", th.StringType),
+                            th.Property("type", th.StringType)
+                        )
+                    ))
+                )),
+                th.Property("emails", th.ObjectType(
+                    th.Property("results", th.ArrayType(
+                        th.ObjectType(
+                            th.Property("id", th.StringType),
+                            th.Property("type", th.StringType)
+                        )
+                    ))
+                )),
+                th.Property("tasks", th.ObjectType(
+                    th.Property("results", th.ArrayType(
+                        th.ObjectType(
+                            th.Property("id", th.StringType),
+                            th.Property("type", th.StringType)
+                        )
+                    ))
+                )),
+                th.Property("meetings", th.ObjectType(
+                    th.Property("results", th.ArrayType(
+                        th.ObjectType(
+                            th.Property("id", th.StringType),
+                            th.Property("type", th.StringType)
+                        )
+                    ))
                 ))
             ))
         )
