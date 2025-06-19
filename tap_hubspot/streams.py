@@ -19,7 +19,7 @@ BooleanType = th.BooleanType
 IntegerType = th.IntegerType
 
 
-class ContactStream(DynamicHubspotStream):
+class ContactStream(DynamicIncrementalHubspotStream):
 
     """
     https://developers.hubspot.com/docs/api/crm/contacts
@@ -36,8 +36,9 @@ class ContactStream(DynamicHubspotStream):
 
     name = "contacts"
     path = "/objects/contacts"
+    incremental_path = "/objects/contacts/search"
     primary_keys = ["id"]
-    replication_key = "updatedAt"
+    replication_key = "lastmodifieddate"
     replication_method = "INCREMENTAL"
     records_jsonpath = "$[results][*]"  # Or override `parse_response`.
 
@@ -47,13 +48,6 @@ class ContactStream(DynamicHubspotStream):
         Returns an updated path which includes the api version
         """
         return "https://api.hubapi.com/crm/v3"
-
-    def get_url_params(
-        self, context: Optional[dict], next_page_token: Optional[Any]
-    ) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params["associations"] = "companies"  # get associated objects
-        return params
 
 
 class UsersStream(HubspotStream):
