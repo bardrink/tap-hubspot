@@ -80,6 +80,7 @@ class TapHubspot(Tap):
             streams.PostalMailStream(self),
             streams.TaskStream(self),
             streams.PropertyContactStream(self),
+            streams.PropertyCompanyStream(self),
         ]
 
 
