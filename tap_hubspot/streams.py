@@ -124,6 +124,13 @@ class OwnersStream(HubspotStream):
         Property("createdAt", StringType),
         Property("updatedAt", StringType),
         Property("archived", BooleanType),
+        Property("teams", ArrayType(
+            PropertiesList(
+                Property("id", StringType),
+                Property("name", StringType),
+                Property("primary", BooleanType)
+            )
+        )),
     ).to_dict()
 
     @property
@@ -1376,6 +1383,7 @@ class LineItemStream(HubspotStream):
                 Property("amount", StringType),
                 Property("start_date", StringType),
                 Property("estimated_end_date", StringType),
+                Property("resource_quantity", StringType),
             ),
         ),
         Property("createdAt", StringType),
@@ -1407,6 +1415,7 @@ class LineItemStream(HubspotStream):
             "amount",
             "start_date",
             "estimated_end_date",
+            "resource_quantity",
         ]
         params["properties"] = ",".join(required_properties)
 
