@@ -81,6 +81,7 @@ class TapHubspot(Tap):
             streams.TaskStream(self),
             streams.PropertyContactStream(self),
             streams.PropertyCompanyStream(self),
+            streams.PropertyDealStream(self),
         ]
 
 
