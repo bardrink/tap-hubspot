@@ -1730,7 +1730,14 @@ class EmailStream(DynamicIncrementalHubspotStream):
         "hs_engagement_source",
         "hs_object_source",
         "hs_product_name",
-        "hs_timestamp"
+        "hs_timestamp",
+        "hs_email_text",
+        "hs_email_from_email",
+        "hs_email_from_firstname",
+        "hs_email_from_lastname",
+        "hs_email_to_email",
+        "hs_email_to_firstname",
+        "hs_email_to_lastname",
     ]
 
     def _get_available_properties(self):
